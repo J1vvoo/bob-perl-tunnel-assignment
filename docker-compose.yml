@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+      - "1080:1080"
+    # iptables 규칙을 설정하기 위해 필요한 권한
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    networks:
+      - challenge-net
+
+  internal_web:
+    build: ./internal_app
+    networks:
+      - challenge-net
+
+networks:
+  challenge-net:
+    driver: bridge

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <display-name>CMDI-Tunnel</display-name>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- 조건 2: war로 구동되어 jsp 파일을 업로드하더라도 웹쉘 실행 불가 -->
+    <!-- /uploads/ 디렉토리 내의 모든 .jsp 파일에 대한 접근을 거부합니다. -->
+    <!-- auth-constraint를 비워두면 어떤 역할도 접근할 수 없으므로 모든 접근이 차단됩니다. -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Block JSP in uploads</web-resource-name>
+            <url-pattern>/uploads/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
+    
+    <!-- 파일 업로드를 위한 multipart-config 설정 -->
+    <servlet>
+        <servlet-name>UploadServlet</servlet-name>
+        <jsp-file>/upload.jsp</jsp-file>
+        <multipart-config>
+            <!-- 50MB -->
+            <max-file-size>52428800</max-file-size>
+            <max-request-size>52428800</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UploadServlet</servlet-name>
+        <url-pattern>/upload.jsp</url-pattern>
+    </servlet-mapping>
+
+</web-app>
